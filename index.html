@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡約生活助手</title>
+    <!-- 引入 Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Font Awesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 莫蘭迪配色方案 -->
+    <style>
+        :root {
+            --morandi-beige: #e8ded2;
+            --morandi-gray: #a3a1a8;
+            --morandi-green: #8a9b6e;
+            --morandi-blue: #6b8c9e;
+            --morandi-brown: #9c7e5b;
+            --morandi-pink: #d4b5b0;
+            --morandi-dark: #5a5a5a;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #f9f7f5;
+            color: #333;
+            max-width: 480px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            min-height: 100vh;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tab-active {
+            color: var(--morandi-blue);
+            border-bottom: 3px solid var(--morandi-blue);
+        }
+        
+        .btn-primary {
+            background-color: var(--morandi-blue);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a7a8a;
+        }
+        
+        .btn-secondary {
+            background-color: var(--morandi-green);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7a8a5e;
+        }
+        
+        .input-field {
+            border: 1px solid #e2e2e2;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        
+        .input-field:focus {
+            border-color: var(--morandi-blue);
+            outline: none;
+        }
+        
+        .payment-option {
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .payment-option.selected {
+            border-color: var(--morandi-blue);
+            background-color: rgba(107, 140, 158, 0.05);
+        }
+        
+        .weather-icon {
+            color: var(--morandi-blue);
+        }
+        
+        .expense-item {
+            border-left: 4px solid var(--morandi-blue);
+        }
+        
+        .income-item {
+            border-left: 4px solid var(--morandi-green);
+        }
+        
+        /* 自定義滾動條 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--morandi-gray);
+            border-radius: 10px;
+        }
+        
+        /* 動畫效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* 響應式調整 */
+        @media (max-width: 480px) {
+            body {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+        <!-- 頂部導航欄 -->
+        <header class="sticky top-0 z-10 bg-white/90 backdrop-blur-sm border-b border-gray-200 px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--morandi-blue);">
+                        <i class="fas fa-leaf text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-semibold" style="color: var(--morandi-dark);">簡約生活助手</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-bell" style="color: var(--morandi-gray);"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-user" style="color: var(--morandi-gray);"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主內容區域 -->
+        <main class="p-4 pb-24">
+            <!-- 功能選項卡 -->
+            <div class="flex justify-between mb-6 overflow-x-auto pb-2">
+                <button 
+                    v-for="tab in tabs" 
+                    :key="tab.id"
+                    @click="activeTab = tab.id"
+                    :class="['px-4 py-2 text-lg font-medium transition-all whitespace-nowrap', activeTab === tab.id ? 'tab-active' : 'text-gray-500']"
+                >
+                    <i :class="tab.icon" class="mr-2"></i>{{ tab.name }}
+                </button>
+            </div>
+
+            <!-- 行程表頁面 -->
+            <div v-if="activeTab === 'schedule'" class="space-y-6 fade-in">
+                <!-- 天氣預報卡片 -->
+                <div class="card p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold" style="color: var(--morandi-blue);">行程天氣預報</h2>
+                        <i class="fas fa-sun weather-icon text-2xl"></i>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-calendar-day mr-2" style="color: var(--morandi-brown);"></i>
+                            <span class="font-medium">行程日期：</span>
+                            <input type="date" v-model="scheduleDate" class="input-field ml-2 flex-grow">
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2" style="color: var(--morandi-brown);"></i>
+                            <span class="font-medium">行程地點：</span>
+                            <input type="text" v-model="scheduleLocation" placeholder="輸入目的地" class="input-field ml-2 flex-grow">
+                        </div>
+                    </div>
+                    
+                    <!-- 天氣資訊 -->
+                    <div v-if="weatherInfo" class="border-t border-gray-100 pt-4">
+                        <h3 class="font-bold mb-2" style="color: var(--morandi-green);">{{ weatherInfo.location }} 天氣預報</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="text-center p-3 rounded-lg bg-gray-50">
+                                <div class="text-2xl mb-1" style="color: var(--morandi-blue);">{{ weatherInfo.temperature }}°C</div>
+                                <div class="text-sm text-gray-600">溫度</div>
+                            </div>
+                            <div class="text-center p-3 rounded-lg bg-gray-50">
+                                <div class="text-2xl mb-1" style="color: var(--morandi-green);">{{ weatherInfo.humidity }}%</div>
+                                <div class="text-sm text-gray-600">濕度</div>
+                            </div>
+                            <div class="text-center p-3 rounded-lg bg-gray-50">
+                                <div class="text-2xl mb-1" style="color: var(--morandi-brown);">{{ weatherInfo.condition }}</div>
+                                <div class="text-sm text-gray-600">天氣狀況</div>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-sm text-gray-600">
+                            <i class="fas fa-info-circle mr-1"></i> 更新於 {{ weatherInfo.updateTime }}
+                        </div>
+                    </div>
+                    
+                    <button @click="fetchWeather" class="btn-primary w-full mt-4">
+                        <i class="fas fa-cloud-sun mr-2"></i> 取得天氣資訊
+                    </button>
+                </div>
+                
+                <!-- 行程列表 -->
+                <div class="card p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold" style="color: var(--morandi-blue);">今日行程</h2>
+                        <button @click="showAddSchedule = true" class="btn-primary py-2 px-4">
+                            <i class="fas fa-plus mr-1"></i> 新增
+                        </button>
+                    </div>
+                    
+                    <div v-if="schedules.length === 0" class="text-center py-8 text-gray-500">
+                        <i class="fas fa-calendar-plus text-4xl mb-3" style="color: var(--morandi-gray);"></i>
+                        <p>目前沒有行程，點擊上方按鈕新增</p>
+                    </div>
+                    
+                    <div v-else class="space-y-3">
+                        <div v-for="(schedule, index) in schedules" :key="index" class="p-4 rounded-lg border border-gray-200">
+                            <div class="flex justify-between">
+                                <div>
+                                    <h3 class="font-bold" style="color: var(--morandi-dark);">{{ schedule.title }}</h3>
+                                    <div class="flex items-center mt-1 text-sm text-gray-600">
+                                        <i class="far fa-clock mr-1"></i>
+                                        <span>{{ schedule.time }}</span>
+                                        <i class="fas fa-map-marker-alt ml-3 mr-1"></i>
+                                        <span>{{ schedule.location }}</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">{{ schedule.description }}</p>
+                                </div>
+                                <button @click="deleteSchedule(index)" class="text-gray-400 hover:text-red-500 h-6">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 地圖頁面 -->
+            <div v-if="activeTab === 'map'" class="space-y-6 fade-in">
+                <!-- 地圖搜尋卡片 -->
+                <div class="card p-5">
+                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">地圖導航</h2>
+                    
+                    <div class="mb-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-search mr-2" style="color: var(--morandi-brown);"></i>
+                            <input 
+                                type="text" 
+                                v-model="searchLocation" 
+                                placeholder="搜尋地點或地址" 
+                                class="input-field flex-grow"
+                            >
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="flex items-center">
+                                <i class="fas fa-map-pin mr-2" style="color: var(--morandi-brown);"></i>
+                                <span class="font-medium">起點：</span>
+                            </div>
+                            <input type="text" v-model="startLocation" placeholder="輸入起點" class="input-field">
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-flag mr-2" style="color: var(--morandi-brown);"></i>
+                                <span class="font-medium">終點：</span>
+                            </div>
+                            <input type="text" v-model="endLocation" placeholder="輸入終點" class="input-field">
+                        </div>
+                    </div>
+                    
+                    <button @click="openGoogleMaps" class="btn-primary w-full">
+                        <i class="fab fa-google mr-2"></i> 開啟 Google 地圖導航
+                    </button>
+                </div>
+                
+                <!-- 地圖預覽 -->
+                <div class="card p-5">
+                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">地圖預覽</h2>
+                    <div class="bg-gray-100 rounded-lg h-64 flex flex-col items-center justify-center">
+                        <i class="fas fa-map-marked-alt text-5xl mb-4" style="color: var(--morandi-gray);"></i>
+                        <p class="text-gray-600 mb-4">點擊上方按鈕開啟 Google 地圖進行導航</p>
+                        <div class="text-center text-gray-500 text-sm">
+                            <p><i class="fas fa-info-circle mr-1"></i> 使用 Google Maps API 顯示地圖</p>
+                            <p>需替換為您自己的 API 金鑰</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最近搜尋 -->
+                <div class="card p-5">
+                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">最近搜尋</h2>
+                    <div class="space-y-2">
+                        <div v-for="(location, index) in recentLocations" :key="index" 
+                             class="p-3 rounded-lg bg-gray-50 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-medium">{{ location.name }}</h3>
+                                <p class="text-sm text-gray-600">{{ location.address }}</p>
+                            </div>
+                            <button @click="setNavigation(location.name)" class="text-blue-500">
+                                <i class="fas fa-directions"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 記帳功能頁面 -->
+            <div v-if="activeTab === 'accounting'" class="space-y-6 fade-in">
+                <!-- 新增支出卡片 -->
+                <div class="card p-5">
+                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">新增支出</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 mb-1">項目名稱</label>
+                            <input type="text" v-model="newExpense.name" placeholder="輸入項目名稱" class="input-field w-full">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 mb-1">金額</label>
+                            <input type="number" v-model="newExpense.amount" placeholder="輸入金額" class="input-field w-full">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 mb-1">付款方式</label>
+                            <div class="grid grid-cols-2 gap-3 mt-2">
+                                <div 
+                                    v-for="method in paymentMethods" 
+                                    :key="method.id"
+                                    @click="newExpense.paymentMethod = method.id"
+                                    :class="['payment-option flex flex-col items-center justify-center', newExpense.paymentMethod === method.id ? 'selected' : '']"
+                                >
+                                    <i :class="method.icon" class="text-2xl mb-2" :style="{color: method.color}"></i>
+                                    <span class="text-sm font-medium">{{ method.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 mb-1">日期</label>
+                            <input type="date" v-model="newExpense.date" class="input-field w-full">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 mb-1">類別</label>
+                            <select v-model="newExpense.category" class="input-field w-full">
+                                <option value="food">飲食</option>
+                                <option value="transportation">交通</option>
+                                <option value="shopping">購物</option>
+                                <option value="entertainment">娛樂</option>
+                                <option value="housing">居住</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button @click="addExpense" class="btn-primary w-full mt-6">
+                        <i class="fas fa-plus mr-2"></i> 新增支出
+                    </button>
+                </div>
+                
+                <!-- 支出統計 -->
+                <div class="card p-5">
+                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">本月支出統計</h2>
+                    
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="text-center p-3 rounded-lg" style="background-color: rgba(107, 140, 158, 0.1);">
+                            <div class="text-xl font-bold" style="color: var(--morandi-blue);">NT$ {{ totalExpenses }}</div>
+                            <div class="text-sm text-gray-600">總支出</div>
+                        </div>
+                        <div class="text-center p-3 rounded-lg" style="background-color: rgba(138, 155, 110, 0.1);">
+                            <div class="text-xl font-bold" style="color: var(--morandi-green);">NT$ {{ averageDailyExpense }}</div>
+                            <div class="text-sm text-gray-600">日均支出</div>
+                        </div>
+                        <div class="text-center p-3 rounded-lg" style="background-color: rgba(156, 126, 91, 0.1);">
+                            <div class="text-xl font-bold" style="color: var(--morandi-brown);">{{ expenseCount }}</div>
+                            <div class="text-sm text-gray-600">支出筆數</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-chart-pie mr-1"></i> 本月預算剩餘：<span class="font-bold">NT$ {{ remainingBudget }}</span>
+                    </div>
+                </div>
+                
+                <!-- 支出紀錄 -->
+                <div class="card p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold" style="color: var(--morandi-blue);">最近支出</h2>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-filter mr-1"></i>
+                            <select v-model="expenseFilter" class="bg-transparent">
+                             

@@ -1,132 +1,217 @@
+# 日本東京旅行助手應用
+
+我將為您創建一個具有日本東京風格、可愛貼圖設計的旅行助手應用。這個應用將整合行程、地圖、記帳和購物清單功能，並採用日式設計元素。
+
+```html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>簡約生活助手</title>
+    <title>東京旅行助手 - 日本風旅行規劃</title>
     <!-- 引入 Vue.js -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Font Awesome 圖標 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 莫蘭迪配色方案 -->
+    <!-- 引入 Google Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --morandi-beige: #e8ded2;
-            --morandi-gray: #a3a1a8;
-            --morandi-green: #8a9b6e;
-            --morandi-blue: #6b8c9e;
-            --morandi-brown: #9c7e5b;
-            --morandi-pink: #d4b5b0;
-            --morandi-dark: #5a5a5a;
+            --japan-red: #bc002d;
+            --japan-cream: #fffaf0;
+            --japan-gray: #5d5d5d;
+            --japan-blue: #1e50a2;
+            --japan-green: #3cb371;
+            --japan-pink: #f6adc6;
+            --japan-brown: #8b4513;
+            --japan-yellow: #ffd700;
+        }
+        
+        * {
+            font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', 'Segoe UI', sans-serif;
         }
         
         body {
-            font-family: 'Helvetica Neue', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background-color: #f9f7f5;
+            background-color: var(--japan-cream);
             color: #333;
             max-width: 480px;
             margin: 0 auto;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
         
-        .card {
+        /* 日式背景元素 */
+        .japan-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f6adc6' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .header-japan {
+            background: linear-gradient(135deg, var(--japan-red) 0%, #8b0000 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-japan::before {
+            content: "❀";
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.2;
+            right: 20px;
+            top: 10px;
+            transform: rotate(30deg);
+        }
+        
+        .card-japan {
             background-color: white;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid var(--japan-red);
+            position: relative;
+            overflow: hidden;
         }
         
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        .card-japan::after {
+            content: "";
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: var(--japan-pink);
+            border-radius: 50%;
+            top: -30px;
+            right: -30px;
+            opacity: 0.1;
         }
         
         .tab-active {
-            color: var(--morandi-blue);
-            border-bottom: 3px solid var(--morandi-blue);
+            color: var(--japan-red);
+            position: relative;
         }
         
-        .btn-primary {
-            background-color: var(--morandi-blue);
+        .tab-active::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background-color: var(--japan-red);
+            border-radius: 3px;
+        }
+        
+        .btn-japan {
+            background-color: var(--japan-red);
             color: white;
-            border-radius: 12px;
+            border-radius: 25px;
             padding: 10px 20px;
             font-weight: 500;
+            box-shadow: 0 4px 8px rgba(188, 0, 45, 0.2);
+            transition: all 0.3s;
         }
         
-        .btn-primary:hover {
-            background-color: #5a7a8a;
+        .btn-japan:hover {
+            background-color: #a00024;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(188, 0, 45, 0.3);
         }
         
         .btn-secondary {
-            background-color: var(--morandi-green);
+            background-color: var(--japan-blue);
             color: white;
-            border-radius: 12px;
+            border-radius: 25px;
             padding: 10px 20px;
             font-weight: 500;
         }
         
         .btn-secondary:hover {
-            background-color: #7a8a5e;
+            background-color: #163a7a;
         }
         
-        .input-field {
-            border: 1px solid #e2e2e2;
+        .input-japan {
+            border: 2px solid #e5e5e5;
             border-radius: 12px;
             padding: 12px 16px;
             font-size: 16px;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
         }
         
-        .input-field:focus {
-            border-color: var(--morandi-blue);
+        .input-japan:focus {
+            border-color: var(--japan-red);
+            background-color: white;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(188, 0, 45, 0.1);
         }
         
-        .payment-option {
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 12px;
-            transition: all 0.2s;
+        .checkbox-japan {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--japan-gray);
+            appearance: none;
             cursor: pointer;
+            position: relative;
         }
         
-        .payment-option.selected {
-            border-color: var(--morandi-blue);
-            background-color: rgba(107, 140, 158, 0.05);
+        .checkbox-japan:checked {
+            background-color: var(--japan-red);
+            border-color: var(--japan-red);
         }
         
-        .weather-icon {
-            color: var(--morandi-blue);
+        .checkbox-japan:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .shopping-item {
+            border-left: 4px solid var(--japan-pink);
+            background-color: rgba(246, 173, 198, 0.05);
         }
         
         .expense-item {
-            border-left: 4px solid var(--morandi-blue);
+            border-left: 4px solid var(--japan-green);
+            background-color: rgba(60, 179, 113, 0.05);
         }
         
-        .income-item {
-            border-left: 4px solid var(--morandi-green);
+        .trip-item {
+            border-left: 4px solid var(--japan-blue);
+            background-color: rgba(30, 80, 162, 0.05);
         }
         
-        /* 自定義滾動條 */
-        ::-webkit-scrollbar {
-            width: 6px;
+        .sakura {
+            color: var(--japan-pink);
         }
         
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+        .torii {
+            color: var(--japan-red);
         }
         
-        ::-webkit-scrollbar-thumb {
-            background: var(--morandi-gray);
-            border-radius: 10px;
+        /* 底部導航欄 */
+        .nav-bottom {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
         
-        /* 動畫效果 */
+        /* 天氣指示器 */
+        .weather-indicator {
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            color: white;
+        }
+        
+        /* 動畫 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -136,45 +221,122 @@
             animation: fadeIn 0.3s ease-out;
         }
         
-        /* 響應式調整 */
-        @media (max-width: 480px) {
-            body {
-                box-shadow: none;
-            }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* 日式標題裝飾 */
+        .title-decorator {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title-decorator::before,
+        .title-decorator::after {
+            content: "❀";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--japan-pink);
+        }
+        
+        .title-decorator::before {
+            left: -30px;
+        }
+        
+        .title-decorator::after {
+            right: -30px;
+        }
+        
+        /* 圓形圖標按鈕 */
+        .circle-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+        }
+        
+        .circle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 日式分隔線 */
+        .divider-japan {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--japan-red), transparent);
+            margin: 20px 0;
+        }
+        
+        /* 旅行貼紙樣式 */
+        .sticker {
+            background-color: var(--japan-yellow);
+            color: var(--japan-brown);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            transform: rotate(-2deg);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+            margin: 5px;
         }
     </style>
 </head>
-<body>
-    <div id="app" class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+<body class="japan-bg">
+    <div id="app" class="min-h-screen pb-24">
         <!-- 頂部導航欄 -->
-        <header class="sticky top-0 z-10 bg-white/90 backdrop-blur-sm border-b border-gray-200 px-4 py-3">
-            <div class="flex items-center justify-between">
+        <header class="header-japan px-4 py-5">
+            <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--morandi-blue);">
-                        <i class="fas fa-leaf text-white"></i>
+                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                        <i class="fas fa-torii-gate text-xl"></i>
                     </div>
-                    <h1 class="text-xl font-semibold" style="color: var(--morandi-dark);">簡約生活助手</h1>
+                    <div>
+                        <h1 class="text-xl font-bold">東京旅行助手</h1>
+                        <p class="text-sm opacity-90">Tokyo Trip Assistant</p>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                        <i class="fas fa-bell" style="color: var(--morandi-gray);"></i>
-                    </button>
-                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                        <i class="fas fa-user" style="color: var(--morandi-gray);"></i>
-                    </button>
+                <div class="text-right">
+                    <div class="text-sm">東京, 日本</div>
+                    <div class="text-xs opacity-80">5°C ~ 12°C</div>
+                </div>
+            </div>
+            
+            <!-- 快速摘要 -->
+            <div class="grid grid-cols-3 gap-3 mt-4">
+                <div class="bg-white/20 rounded-xl p-3 text-center">
+                    <div class="text-lg font-bold">8</div>
+                    <div class="text-xs">行程天數</div>
+                </div>
+                <div class="bg-white/20 rounded-xl p-3 text-center">
+                    <div class="text-lg font-bold">¥42,500</div>
+                    <div class="text-xs">總預算</div>
+                </div>
+                <div class="bg-white/20 rounded-xl p-3 text-center">
+                    <div class="text-lg font-bold">15</div>
+                    <div class="text-xs">購物項目</div>
                 </div>
             </div>
         </header>
 
         <!-- 主內容區域 -->
-        <main class="p-4 pb-24">
+        <main class="px-4 -mt-6 relative z-10">
             <!-- 功能選項卡 -->
             <div class="flex justify-between mb-6 overflow-x-auto pb-2">
                 <button 
                     v-for="tab in tabs" 
                     :key="tab.id"
                     @click="activeTab = tab.id"
-                    :class="['px-4 py-2 text-lg font-medium transition-all whitespace-nowrap', activeTab === tab.id ? 'tab-active' : 'text-gray-500']"
+                    :class="['px-4 py-2 text-lg font-medium transition-all whitespace-nowrap', activeTab === tab.id ? 'tab-active font-bold' : 'text-gray-600']"
                 >
                     <i :class="tab.icon" class="mr-2"></i>{{ tab.name }}
                 </button>
@@ -182,83 +344,111 @@
 
             <!-- 行程表頁面 -->
             <div v-if="activeTab === 'schedule'" class="space-y-6 fade-in">
-                <!-- 天氣預報卡片 -->
-                <div class="card p-5">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold" style="color: var(--morandi-blue);">行程天氣預報</h2>
-                        <i class="fas fa-sun weather-icon text-2xl"></i>
-                    </div>
+                <!-- 行前清單卡片 -->
+                <div class="card-japan p-5 mb-6">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-clipboard-check mr-2 torii"></i>
+                        <span class="title-decorator">行前清單</span>
+                    </h2>
                     
-                    <div class="mb-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-calendar-day mr-2" style="color: var(--morandi-brown);"></i>
-                            <span class="font-medium">行程日期：</span>
-                            <input type="date" v-model="scheduleDate" class="input-field ml-2 flex-grow">
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2" style="color: var(--morandi-brown);"></i>
-                            <span class="font-medium">行程地點：</span>
-                            <input type="text" v-model="scheduleLocation" placeholder="輸入目的地" class="input-field ml-2 flex-grow">
-                        </div>
-                    </div>
-                    
-                    <!-- 天氣資訊 -->
-                    <div v-if="weatherInfo" class="border-t border-gray-100 pt-4">
-                        <h3 class="font-bold mb-2" style="color: var(--morandi-green);">{{ weatherInfo.location }} 天氣預報</h3>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div class="text-center p-3 rounded-lg bg-gray-50">
-                                <div class="text-2xl mb-1" style="color: var(--morandi-blue);">{{ weatherInfo.temperature }}°C</div>
-                                <div class="text-sm text-gray-600">溫度</div>
-                            </div>
-                            <div class="text-center p-3 rounded-lg bg-gray-50">
-                                <div class="text-2xl mb-1" style="color: var(--morandi-green);">{{ weatherInfo.humidity }}%</div>
-                                <div class="text-sm text-gray-600">濕度</div>
-                            </div>
-                            <div class="text-center p-3 rounded-lg bg-gray-50">
-                                <div class="text-2xl mb-1" style="color: var(--morandi-brown);">{{ weatherInfo.condition }}</div>
-                                <div class="text-sm text-gray-600">天氣狀況</div>
-                            </div>
-                        </div>
-                        <div class="mt-3 text-sm text-gray-600">
-                            <i class="fas fa-info-circle mr-1"></i> 更新於 {{ weatherInfo.updateTime }}
+                    <div class="space-y-3 mb-4">
+                        <div v-for="(item, index) in preTripChecklist" :key="index" class="flex items-center">
+                            <input 
+                                type="checkbox" 
+                                :id="'check-' + index"
+                                v-model="item.completed"
+                                class="checkbox-japan mr-3"
+                            >
+                            <label 
+                                :for="'check-' + index" 
+                                :class="['flex-grow', item.completed ? 'line-through text-gray-500' : '']"
+                            >
+                                {{ item.name }}
+                            </label>
+                            <span v-if="item.priority === 'high'" class="sticker text-xs">重要</span>
                         </div>
                     </div>
                     
-                    <button @click="fetchWeather" class="btn-primary w-full mt-4">
-                        <i class="fas fa-cloud-sun mr-2"></i> 取得天氣資訊
-                    </button>
+                    <div class="flex">
+                        <input 
+                            type="text" 
+                            v-model="newChecklistItem" 
+                            placeholder="新增行前準備事項..." 
+                            class="input-japan flex-grow mr-2"
+                            @keyup.enter="addChecklistItem"
+                        >
+                        <button @click="addChecklistItem" class="btn-japan px-4">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
                 
-                <!-- 行程列表 -->
-                <div class="card p-5">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold" style="color: var(--morandi-blue);">今日行程</h2>
-                        <button @click="showAddSchedule = true" class="btn-primary py-2 px-4">
-                            <i class="fas fa-plus mr-1"></i> 新增
+                <!-- 行程安排卡片 -->
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 torii"></i>
+                        <span class="title-decorator">行程安排</span>
+                    </h2>
+                    
+                    <!-- 行程天數選擇 -->
+                    <div class="flex overflow-x-auto space-x-2 mb-4 pb-2">
+                        <button 
+                            v-for="day in tripDays" 
+                            :key="day.id"
+                            @click="selectedDay = day.id"
+                            :class="['px-4 py-2 rounded-full whitespace-nowrap', selectedDay === day.id ? 'bg-red-100 text-red-600 font-bold' : 'bg-gray-100 text-gray-700']"
+                        >
+                            Day {{ day.id }}
                         </button>
                     </div>
                     
-                    <div v-if="schedules.length === 0" class="text-center py-8 text-gray-500">
-                        <i class="fas fa-calendar-plus text-4xl mb-3" style="color: var(--morandi-gray);"></i>
-                        <p>目前沒有行程，點擊上方按鈕新增</p>
-                    </div>
-                    
-                    <div v-else class="space-y-3">
-                        <div v-for="(schedule, index) in schedules" :key="index" class="p-4 rounded-lg border border-gray-200">
+                    <!-- 當天行程 -->
+                    <div v-if="selectedDaySchedule" class="space-y-4">
+                        <div class="weather-indicator rounded-xl p-4 mb-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="text-lg font-bold">東京天氣</div>
+                                    <div class="text-sm">{{ selectedDaySchedule.weather.temp }}°C, {{ selectedDaySchedule.weather.condition }}</div>
+                                </div>
+                                <i class="fas fa-sun text-3xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div v-for="(item, index) in selectedDaySchedule.items" :key="index" class="trip-item p-4 rounded-xl">
                             <div class="flex justify-between">
                                 <div>
-                                    <h3 class="font-bold" style="color: var(--morandi-dark);">{{ schedule.title }}</h3>
-                                    <div class="flex items-center mt-1 text-sm text-gray-600">
-                                        <i class="far fa-clock mr-1"></i>
-                                        <span>{{ schedule.time }}</span>
-                                        <i class="fas fa-map-marker-alt ml-3 mr-1"></i>
-                                        <span>{{ schedule.location }}</span>
+                                    <div class="font-bold text-lg">{{ item.time }}</div>
+                                    <div class="text-gray-700">{{ item.title }}</div>
+                                    <div class="text-sm text-gray-600 mt-1">
+                                        <i class="fas fa-map-marker-alt mr-1"></i>{{ item.location }}
                                     </div>
-                                    <p class="mt-2 text-gray-700">{{ schedule.description }}</p>
+                                    <div v-if="item.note" class="text-sm text-gray-600 mt-1">
+                                        <i class="fas fa-sticky-note mr-1"></i>{{ item.note }}
+                                    </div>
                                 </div>
-                                <button @click="deleteSchedule(index)" class="text-gray-400 hover:text-red-500 h-6">
-                                    <i class="fas fa-times"></i>
+                                <div class="flex items-start">
+                                    <button @click="showNavigation(item.location)" class="circle-btn bg-blue-100 text-blue-600 mr-2">
+                                        <i class="fas fa-directions"></i>
+                                    </button>
+                                    <button @click="removeTripItem(selectedDay, index)" class="circle-btn bg-red-100 text-red-600">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 新增行程項目 -->
+                        <div class="mt-6 p-4 border-2 border-dashed border-gray-300 rounded-xl">
+                            <h3 class="font-bold mb-3">新增行程項目</h3>
+                            <div class="space-y-3">
+                                <input type="text" v-model="newTripItem.title" placeholder="活動名稱" class="input-japan w-full">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <input type="time" v-model="newTripItem.time" class="input-japan">
+                                    <input type="text" v-model="newTripItem.location" placeholder="地點" class="input-japan">
+                                </div>
+                                <textarea v-model="newTripItem.note" placeholder="備註" class="input-japan w-full h-20"></textarea>
+                                <button @click="addTripItem" class="btn-japan w-full">
+                                    <i class="fas fa-plus mr-2"></i>新增項目
                                 </button>
                             </div>
                         </div>
@@ -269,66 +459,76 @@
             <!-- 地圖頁面 -->
             <div v-if="activeTab === 'map'" class="space-y-6 fade-in">
                 <!-- 地圖搜尋卡片 -->
-                <div class="card p-5">
-                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">地圖導航</h2>
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-map-marked-alt mr-2 torii"></i>
+                        <span class="title-decorator">東京地圖</span>
+                    </h2>
                     
                     <div class="mb-4">
                         <div class="flex items-center mb-3">
-                            <i class="fas fa-search mr-2" style="color: var(--morandi-brown);"></i>
+                            <i class="fas fa-search mr-2 torii"></i>
                             <input 
                                 type="text" 
                                 v-model="searchLocation" 
-                                placeholder="搜尋地點或地址" 
-                                class="input-field flex-grow"
+                                placeholder="搜尋東京地點..." 
+                                class="input-japan flex-grow"
                             >
                         </div>
                         
                         <div class="grid grid-cols-2 gap-3">
                             <div class="flex items-center">
-                                <i class="fas fa-map-pin mr-2" style="color: var(--morandi-brown);"></i>
+                                <i class="fas fa-map-pin mr-2 torii"></i>
                                 <span class="font-medium">起點：</span>
                             </div>
-                            <input type="text" v-model="startLocation" placeholder="輸入起點" class="input-field">
+                            <input type="text" v-model="startLocation" placeholder="例如：東京車站" class="input-japan">
                             
                             <div class="flex items-center">
-                                <i class="fas fa-flag mr-2" style="color: var(--morandi-brown);"></i>
+                                <i class="fas fa-flag mr-2 torii"></i>
                                 <span class="font-medium">終點：</span>
                             </div>
-                            <input type="text" v-model="endLocation" placeholder="輸入終點" class="input-field">
+                            <input type="text" v-model="endLocation" placeholder="例如：淺草寺" class="input-japan">
                         </div>
                     </div>
                     
-                    <button @click="openGoogleMaps" class="btn-primary w-full">
+                    <button @click="openGoogleMaps" class="btn-japan w-full">
                         <i class="fab fa-google mr-2"></i> 開啟 Google 地圖導航
                     </button>
                 </div>
                 
                 <!-- 地圖預覽 -->
-                <div class="card p-5">
-                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">地圖預覽</h2>
-                    <div class="bg-gray-100 rounded-lg h-64 flex flex-col items-center justify-center">
-                        <i class="fas fa-map-marked-alt text-5xl mb-4" style="color: var(--morandi-gray);"></i>
-                        <p class="text-gray-600 mb-4">點擊上方按鈕開啟 Google 地圖進行導航</p>
-                        <div class="text-center text-gray-500 text-sm">
-                            <p><i class="fas fa-info-circle mr-1"></i> 使用 Google Maps API 顯示地圖</p>
-                            <p>需替換為您自己的 API 金鑰</p>
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4">熱門景點</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div 
+                            v-for="spot in popularSpots" 
+                            :key="spot.id"
+                            class="bg-gray-50 rounded-xl p-4 text-center"
+                            @click="setNavigation(spot.name)"
+                        >
+                            <div class="text-3xl mb-2">{{ spot.icon }}</div>
+                            <div class="font-bold">{{ spot.name }}</div>
+                            <div class="text-xs text-gray-600 mt-1">{{ spot.area }}</div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 最近搜尋 -->
-                <div class="card p-5">
-                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">最近搜尋</h2>
-                    <div class="space-y-2">
-                        <div v-for="(location, index) in recentLocations" :key="index" 
-                             class="p-3 rounded-lg bg-gray-50 flex justify-between items-center">
-                            <div>
-                                <h3 class="font-medium">{{ location.name }}</h3>
-                                <p class="text-sm text-gray-600">{{ location.address }}</p>
+                <!-- 交通資訊 -->
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4">交通資訊</h2>
+                    <div class="space-y-3">
+                        <div v-for="(route, index) in transportRoutes" :key="index" class="flex items-center p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" :style="{ backgroundColor: route.color }">
+                                <i class="fas fa-train text-white"></i>
                             </div>
-                            <button @click="setNavigation(location.name)" class="text-blue-500">
-                                <i class="fas fa-directions"></i>
-                            </button>
+                            <div class="flex-grow">
+                                <div class="font-bold">{{ route.name }}</div>
+                                <div class="text-sm text-gray-600">{{ route.from }} → {{ route.to }}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold">{{ route.time }}</div>
+                                <div class="text-sm text-gray-600">{{ route.cost }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -337,18 +537,21 @@
             <!-- 記帳功能頁面 -->
             <div v-if="activeTab === 'accounting'" class="space-y-6 fade-in">
                 <!-- 新增支出卡片 -->
-                <div class="card p-5">
-                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">新增支出</h2>
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-yen-sign mr-2 torii"></i>
+                        <span class="title-decorator">記一筆</span>
+                    </h2>
                     
                     <div class="space-y-4">
                         <div>
                             <label class="block text-gray-700 mb-1">項目名稱</label>
-                            <input type="text" v-model="newExpense.name" placeholder="輸入項目名稱" class="input-field w-full">
+                            <input type="text" v-model="newExpense.name" placeholder="例如：拉麵、地鐵票" class="input-japan w-full">
                         </div>
                         
                         <div>
-                            <label class="block text-gray-700 mb-1">金額</label>
-                            <input type="number" v-model="newExpense.amount" placeholder="輸入金額" class="input-field w-full">
+                            <label class="block text-gray-700 mb-1">金額 (¥)</label>
+                            <input type="number" v-model="newExpense.amount" placeholder="輸入金額" class="input-japan w-full">
                         </div>
                         
                         <div>
@@ -358,7 +561,7 @@
                                     v-for="method in paymentMethods" 
                                     :key="method.id"
                                     @click="newExpense.paymentMethod = method.id"
-                                    :class="['payment-option flex flex-col items-center justify-center', newExpense.paymentMethod === method.id ? 'selected' : '']"
+                                    :class="['payment-option flex flex-col items-center justify-center p-3 rounded-xl', newExpense.paymentMethod === method.id ? 'border-2 border-red-500 bg-red-50' : 'border border-gray-200']"
                                 >
                                     <i :class="method.icon" class="text-2xl mb-2" :style="{color: method.color}"></i>
                                     <span class="text-sm font-medium">{{ method.name }}</span>
@@ -366,58 +569,619 @@
                             </div>
                         </div>
                         
-                        <div>
-                            <label class="block text-gray-700 mb-1">日期</label>
-                            <input type="date" v-model="newExpense.date" class="input-field w-full">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-gray-700 mb-1">類別</label>
-                            <select v-model="newExpense.category" class="input-field w-full">
-                                <option value="food">飲食</option>
-                                <option value="transportation">交通</option>
-                                <option value="shopping">購物</option>
-                                <option value="entertainment">娛樂</option>
-                                <option value="housing">居住</option>
-                                <option value="other">其他</option>
-                            </select>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gray-700 mb-1">日期</label>
+                                <input type="date" v-model="newExpense.date" class="input-japan w-full">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-1">類別</label>
+                                <select v-model="newExpense.category" class="input-japan w-full">
+                                    <option value="food">飲食</option>
+                                    <option value="transportation">交通</option>
+                                    <option value="shopping">購物</option>
+                                    <option value="attraction">景點門票</option>
+                                    <option value="accommodation">住宿</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     
-                    <button @click="addExpense" class="btn-primary w-full mt-6">
+                    <button @click="addExpense" class="btn-japan w-full mt-6">
                         <i class="fas fa-plus mr-2"></i> 新增支出
                     </button>
                 </div>
                 
                 <!-- 支出統計 -->
-                <div class="card p-5">
-                    <h2 class="text-xl font-bold mb-4" style="color: var(--morandi-blue);">本月支出統計</h2>
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4">支出統計</h2>
                     
                     <div class="grid grid-cols-3 gap-3 mb-4">
-                        <div class="text-center p-3 rounded-lg" style="background-color: rgba(107, 140, 158, 0.1);">
-                            <div class="text-xl font-bold" style="color: var(--morandi-blue);">NT$ {{ totalExpenses }}</div>
+                        <div class="text-center p-3 rounded-xl bg-red-50">
+                            <div class="text-xl font-bold torii">¥ {{ totalExpenses }}</div>
                             <div class="text-sm text-gray-600">總支出</div>
                         </div>
-                        <div class="text-center p-3 rounded-lg" style="background-color: rgba(138, 155, 110, 0.1);">
-                            <div class="text-xl font-bold" style="color: var(--morandi-green);">NT$ {{ averageDailyExpense }}</div>
+                        <div class="text-center p-3 rounded-xl bg-blue-50">
+                            <div class="text-xl font-bold" style="color: var(--japan-blue);">¥ {{ averageDailyExpense }}</div>
                             <div class="text-sm text-gray-600">日均支出</div>
                         </div>
-                        <div class="text-center p-3 rounded-lg" style="background-color: rgba(156, 126, 91, 0.1);">
-                            <div class="text-xl font-bold" style="color: var(--morandi-brown);">{{ expenseCount }}</div>
+                        <div class="text-center p-3 rounded-xl bg-green-50">
+                            <div class="text-xl font-bold" style="color: var(--japan-green);">{{ expenseCount }}</div>
                             <div class="text-sm text-gray-600">支出筆數</div>
                         </div>
                     </div>
                     
                     <div class="text-sm text-gray-600">
-                        <i class="fas fa-chart-pie mr-1"></i> 本月預算剩餘：<span class="font-bold">NT$ {{ remainingBudget }}</span>
+                        <i class="fas fa-wallet mr-1"></i> 預算剩餘：<span class="font-bold torii">¥ {{ remainingBudget }}</span>
                     </div>
                 </div>
                 
                 <!-- 支出紀錄 -->
-                <div class="card p-5">
+                <div class="card-japan p-5">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold" style="color: var(--morandi-blue);">最近支出</h2>
+                        <h2 class="text-xl font-bold">支出明細</h2>
+                        <div class="flex space-x-2">
+                            <button 
+                                v-for="filter in expenseFilters" 
+                                :key="filter.id"
+                                @click="expenseFilter = filter.id"
+                                :class="['px-3 py-1 rounded-full text-sm', expenseFilter === filter.id ? 'bg-red-100 text-red-600 font-bold' : 'bg-gray-100 text-gray-700']"
+                            >
+                                {{ filter.name }}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div v-if="filteredExpenses.length === 0" class="text-center py-8 text-gray-500">
+                        <i class="fas fa-receipt text-4xl mb-3" style="color: var(--japan-gray);"></i>
+                        <p>沒有支出紀錄</p>
+                    </div>
+                    
+                    <div v-else class="space-y-3">
+                        <div 
+                            v-for="(expense, index) in filteredExpenses" 
+                            :key="index"
+                            class="expense-item p-4 rounded-xl"
+                        >
+                            <div class="flex justify-between">
+                                <div>
+                                    <h3 class="font-bold">{{ expense.name }}</h3>
+                                    <div class="flex items-center mt-1 text-sm text-gray-600">
+                                        <i class="far fa-calendar mr-1"></i>
+                                        <span class="mr-3">{{ expense.date }}</span>
+                                        <i :class="getPaymentMethodIcon(expense.paymentMethod)" class="mr-1"></i>
+                                        <span>{{ getPaymentMethodName(expense.paymentMethod) }}</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-lg font-bold" style="color: var(--japan-green);">¥ {{ expense.amount }}</div>
+                                    <div class="text-sm text-gray-600 capitalize">{{ getCategoryName(expense.category) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 購物清單頁面 -->
+            <div v-if="activeTab === 'shopping'" class="space-y-6 fade-in">
+                <!-- 新增購物項目 -->
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shopping-bag mr-2 torii"></i>
+                        <span class="title-decorator">購物清單</span>
+                    </h2>
+                    
+                    <div class="flex space-x-2 mb-3">
+                        <input 
+                            type="text" 
+                            v-model="newItem.name" 
+                            placeholder="想買什麼？例如：CEZANNE唇膏" 
+                            class="input-japan flex-grow"
+                            @keyup.enter="addShoppingItem"
+                        >
+                        <button @click="addShoppingItem" class="btn-japan px-5">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex items-center">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" v-model="newItem.important" class="checkbox-japan">
+                                <span class="ml-2 text-gray-700">重要項目</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <span class="text-gray-700 mr-2">預算：¥</span>
+                            <input 
+                                type="number" 
+                                v-model="newItem.budget" 
+                                min="0" 
+                                class="input-japan w-24"
+                            >
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 購物清單項目 -->
+                <div class="card-japan p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">我的清單</h2>
                         <div class="text-sm text-gray-600">
-                            <i class="fas fa-filter mr-1"></i>
-                            <select v-model="expenseFilter" class="bg-transparent">
-                             
+                            {{ completedItems }} / {{ shoppingList.length }} 已完成
+                        </div>
+                    </div>
+                    
+                    <div v-if="shoppingList.length === 0" class="text-center py-8 text-gray-500">
+                        <i class="fas fa-shopping-cart text-4xl mb-3" style="color: var(--japan-gray);"></i>
+                        <p>購物清單是空的</p>
+                        <p class="text-sm mt-2">開始添加您想在日本購買的商品吧！</p>
+                    </div>
+                    
+                    <div v-else class="space-y-3">
+                        <div 
+                            v-for="(item, index) in shoppingList" 
+                            :key="index"
+                            :class="['shopping-item p-4 rounded-xl', item.important ? 'border-2 border-red-300' : '']"
+                        >
+                            <div class="flex items-center">
+                                <button 
+                                    @click="toggleComplete(index)"
+                                    :class="['w-6 h-6 rounded-full border-2 flex items-center justify-center mr-3', item.completed ? 'bg-green-500 border-green-500' : 'border-gray-300']"
+                                >
+                                    <i v-if="item.completed" class="fas fa-check text-white text-xs"></i>
+                                </button>
+                                
+                                <div class="flex-grow">
+                                    <h3 :class="['font-medium', item.completed ? 'line-through text-gray-500' : '']">
+                                        {{ item.name }}
+                                        <span v-if="item.important" class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">重要</span>
+                                    </h3>
+                                    <div class="text-sm text-gray-600 mt-1 flex items-center">
+                                        <i class="fas fa-yen-sign mr-1"></i> 預算：{{ item.budget ? '¥' + item.budget : '未設定' }}
+                                    </div>
+                                </div>
+                                
+                                <button @click="deleteShoppingItem(index)" class="text-gray-400 hover:text-red-500 ml-2">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider-japan"></div>
+                    
+                    <div class="flex justify-between">
+                        <button @click="clearCompleted" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-check-circle mr-1"></i> 清除已完成
+                        </button>
+                        <button @click="showBudgetSummary = !showBudgetSummary" class="text-gray-600 hover:text-blue-600">
+                            <i class="fas fa-chart-pie mr-1"></i> 預算統計
+                        </button>
+                    </div>
+                    
+                    <!-- 預算統計 -->
+                    <div v-if="showBudgetSummary" class="mt-4 p-4 bg-gray-50 rounded-xl">
+                        <h3 class="font-bold mb-2">購物預算統計</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="text-center p-3 rounded-lg bg-white">
+                                <div class="text-lg font-bold torii">¥ {{ totalShoppingBudget }}</div>
+                                <div class="text-sm text-gray-600">總預算</div>
+                            </div>
+                            <div class="text-center p-3 rounded-lg bg-white">
+                                <div class="text-lg font-bold" style="color: var(--japan-green);">¥ {{ remainingShoppingBudget }}</div>
+                                <div class="text-sm text-gray-600">剩餘預算</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 日本購物推薦 -->
+                <div class="card-japan p-5">
+                    <h2 class="text-xl font-bold mb-4">日本購物推薦</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div v-for="recommendation in shoppingRecommendations" :key="recommendation.id" class="bg-gray-50 rounded-xl p-4">
+                            <div class="font-bold">{{ recommendation.name }}</div>
+                            <div class="text-sm text-gray-600 mt-1">{{ recommendation.description }}</div>
+                            <div class="text-xs text-red-600 mt-2">約 ¥{{ recommendation.price }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 底部導航欄 -->
+        <nav class="nav-bottom fixed bottom-0 left-0 right-0 py-3 px-6 flex justify-around z-10 max-w-480 mx-auto">
+            <button 
+                v-for="tab in tabs" 
+                :key="tab.id"
+                @click="activeTab = tab.id"
+                :class="['flex flex-col items-center py-1 transition-all', activeTab === tab.id ? 'text-red-600 font-bold' : 'text-gray-600']"
+            >
+                <i :class="[tab.icon, 'text-xl mb-1']"></i>
+                <span class="text-xs">{{ tab.name }}</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+        
+        createApp({
+            setup() {
+                // 當前選中的選項卡
+                const activeTab = ref('schedule');
+                
+                // 選項卡數據
+                const tabs = [
+                    { id: 'schedule', name: '行程', icon: 'fas fa-calendar-alt' },
+                    { id: 'map', name: '地圖', icon: 'fas fa-map' },
+                    { id: 'accounting', name: '記帳', icon: 'fas fa-yen-sign' },
+                    { id: 'shopping', name: '購物', icon: 'fas fa-shopping-bag' }
+                ];
+                
+                // 行前清單相關數據
+                const preTripChecklist = ref([
+                    { name: '購買旅遊保險', completed: false, priority: 'high' },
+                    { name: '買網卡/租WiFi', completed: false, priority: 'high' },
+                    { name: '換日幣', completed: true, priority: 'high' },
+                    { name: '預訂住宿', completed: true, priority: 'high' },
+                    { name: '購買機票', completed: true, priority: 'high' },
+                    { name: '準備轉接頭', completed: false, priority: 'medium' },
+                    { name: '下載離線地圖', completed: false, priority: 'medium' },
+                    { name: '學習基本日語', completed: false, priority: 'low' }
+                ]);
+                const newChecklistItem = ref('');
+                
+                // 行程相關數據
+                const tripDays = ref([
+                    { id: 1, date: '11/20' },
+                    { id: 2, date: '11/21' },
+                    { id: 3, date: '11/22' },
+                    { id: 4, date: '11/23' },
+                    { id: 5, date: '11/24' },
+                    { id: 6, date: '11/25' },
+                    { id: 7, date: '11/26' },
+                    { id: 8, date: '11/27' }
+                ]);
+                const selectedDay = ref(1);
+                const scheduleData = ref({
+                    1: {
+                        weather: { temp: '5', condition: '晴天' },
+                        items: [
+                            { time: '08:00', title: '航班前往東京', location: '香港國際機場 (HKG)', note: '航班 JL736' },
+                            { time: '13:05', title: '抵達成田機場', location: '成田國際機場 (NRT)', note: '領取行李' },
+                            { time: '15:00', title: 'NEX成田特快', location: '成田空港駅 → 新宿駅', note: '約1小時20分鐘' },
+                            { time: '19:00', title: '晚餐 - 一蘭拉麵', location: '新宿店', note: '' }
+                        ]
+                    },
+                    2: {
+                        weather: { temp: '6', condition: '多雲' },
+                        items: [
+                            { time: '09:00', title: '明治神宮', location: '澀谷區', note: '早起避開人潮' },
+                            { time: '12:00', title: '午餐 - 原宿竹下通', location: '原宿', note: '可麗餅、街頭小吃' },
+                            { time: '14:00', title: '涉谷十字路口', location: '涉谷', note: '忠犬八公像拍照' },
+                            { time: '17:00', title: '東京鐵塔', location: '港區', note: '夜景很美' }
+                        ]
+                    }
+                });
+                const newTripItem = ref({
+                    title: '',
+                    time: '',
+                    location: '',
+                    note: ''
+                });
+                
+                // 地圖相關數據
+                const searchLocation = ref('');
+                const startLocation = ref('新宿駅');
+                const endLocation = ref('淺草寺');
+                const popularSpots = ref([
+                    { id: 1, name: '淺草寺', area: '台東區', icon: '⛩️' },
+                    { id: 2, name: '東京鐵塔', area: '港區', icon: '🗼' },
+                    { id: 3, name: '澀谷', area: '澀谷區', icon: '🚶' },
+                    { id: 4, name: '東京迪士尼', area: '浦安市', icon: '🏰' },
+                    { id: 5, name: '新宿御苑', area: '新宿區', icon: '🌸' },
+                    { id: 6, name: '秋葉原', area: '千代田區', icon: '🎮' }
+                ]);
+                const transportRoutes = ref([
+                    { name: 'JR山手線', from: '新宿', to: '東京', time: '15分', cost: '¥200', color: '#008000' },
+                    { name: '東京Metro', from: '淺草', to: '銀座', time: '20分', cost: '¥180', color: '#F15A22' },
+                    { name: '都營地下鐵', from: '新宿', to: '六本木', time: '12分', cost: '¥180', color: '#009944' }
+                ]);
+                
+                // 記帳相關數據
+                const paymentMethods = ref([
+                    { id: 'cash', name: '現金', icon: 'fas fa-money-bill-wave', color: '#3cb371' },
+                    { id: 'credit', name: '信用卡', icon: 'fas fa-credit-card', color: '#bc002d' },
+                    { id: 'ic', name: 'IC卡', icon: 'fas fa-train', color: '#1e50a2' },
+                    { id: 'digital', name: '電子支付', icon: 'fas fa-mobile-alt', color: '#8b4513' }
+                ]);
+                const newExpense = ref({
+                    name: '',
+                    amount: '',
+                    paymentMethod: 'cash',
+                    date: new Date().toISOString().split('T')[0],
+                    category: 'food'
+                });
+                const expenses = ref([
+                    { name: '一蘭拉麵', amount: 1200, paymentMethod: 'cash', date: '2023-11-20', category: 'food' },
+                    { name: 'Suica卡儲值', amount: 2000, paymentMethod: 'cash', date: '2023-11-20', category: 'transportation' },
+                    { name: '淺草寺御守', amount: 800, paymentMethod: 'credit', date: '2023-11-21', category: 'shopping' },
+                    { name: '東京鐵塔門票', amount: 1200, paymentMethod: 'ic', date: '2023-11-21', category: 'attraction' }
+                ]);
+                const expenseFilters = ref([
+                    { id: 'all', name: '全部' },
+                    { id: 'cash', name: '現金' },
+                    { id: 'credit', name: '信用卡' }
+                ]);
+                const expenseFilter = ref('all');
+                const travelBudget = ref(50000);
+                
+                // 購物清單相關數據
+                const newItem = ref({
+                    name: '',
+                    important: false,
+                    budget: ''
+                });
+                const shoppingList = ref([
+                    { name: 'CEZANNE 101號唇膏', completed: false, important: true, budget: 3000 },
+                    { name: '白色戀人巧克力', completed: true, important: false, budget: 1500 },
+                    { name: '東京香蕉蛋糕', completed: false, important: true, budget: 1200 },
+                    { name: '藥妝店面膜', completed: false, important: false, budget: 2000 },
+                    { name: 'Uniqlo發熱衣', completed: false, important: false, budget: 2500 }
+                ]);
+                const showBudgetSummary = ref(false);
+                const shoppingRecommendations = ref([
+                    { id: 1, name: 'KitKat抹茶味', description: '日本限定口味', price: 500 },
+                    { id: 2, name: 'SK-II化妝水', description: '機場免稅店', price: 12000 },
+                    { id: 3, name: 'Pokemon周邊', description: '寶可夢中心', price: 1500 },
+                    { id: 4, name: '傳統和服體驗', description: '淺草寺附近', price: 3000 }
+                ]);
+                
+                // 計算屬性
+                const selectedDaySchedule = computed(() => {
+                    return scheduleData.value[selectedDay.value];
+                });
+                
+                const totalExpenses = computed(() => {
+                    return expenses.value.reduce((sum, expense) => sum + Number(expense.amount), 0);
+                });
+                
+                const averageDailyExpense = computed(() => {
+                    const expenseDays = [...new Set(expenses.value.map(e => e.date))].length;
+                    return expenseDays > 0 ? Math.round(totalExpenses.value / expenseDays) : 0;
+                });
+                
+                const expenseCount = computed(() => {
+                    return expenses.value.length;
+                });
+                
+                const remainingBudget = computed(() => {
+                    return travelBudget.value - totalExpenses.value;
+                });
+                
+                const filteredExpenses = computed(() => {
+                    if (expenseFilter.value === 'all') return expenses.value;
+                    return expenses.value.filter(expense => expense.paymentMethod === expenseFilter.value);
+                });
+                
+                const completedItems = computed(() => {
+                    return shoppingList.value.filter(item => item.completed).length;
+                });
+                
+                const totalShoppingBudget = computed(() => {
+                    return shoppingList.value.reduce((sum, item) => sum + (Number(item.budget) || 0), 0);
+                });
+                
+                const remainingShoppingBudget = computed(() => {
+                    const spent = shoppingList.value
+                        .filter(item => item.completed)
+                        .reduce((sum, item) => sum + (Number(item.budget) || 0), 0);
+                    return totalShoppingBudget.value - spent;
+                });
+                
+                // 方法
+                const addChecklistItem = () => {
+                    if (!newChecklistItem.value.trim()) return;
+                    
+                    preTripChecklist.value.push({
+                        name: newChecklistItem.value,
+                        completed: false,
+                        priority: 'medium'
+                    });
+                    
+                    newChecklistItem.value = '';
+                };
+                
+                const addTripItem = () => {
+                    if (!newTripItem.value.title.trim()) return;
+                    
+                    if (!scheduleData.value[selectedDay.value]) {
+                        scheduleData.value[selectedDay.value] = {
+                            weather: { temp: '7', condition: '多雲' },
+                            items: []
+                        };
+                    }
+                    
+                    scheduleData.value[selectedDay.value].items.push({
+                        time: newTripItem.value.time || '00:00',
+                        title: newTripItem.value.title,
+                        location: newTripItem.value.location,
+                        note: newTripItem.value.note
+                    });
+                    
+                    // 重置表單
+                    newTripItem.value = {
+                        title: '',
+                        time: '',
+                        location: '',
+                        note: ''
+                    };
+                };
+                
+                const removeTripItem = (day, index) => {
+                    if (scheduleData.value[day]) {
+                        scheduleData.value[day].items.splice(index, 1);
+                    }
+                };
+                
+                const showNavigation = (location) => {
+                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ' 東京')}`;
+                    window.open(url, '_blank');
+                };
+                
+                const openGoogleMaps = () => {
+                    const start = startLocation.value || '新宿駅';
+                    const end = endLocation.value || '淺草寺';
+                    const url = `https://www.google.com/maps/dir/${encodeURIComponent(start)}/${encodeURIComponent(end)}`;
+                    window.open(url, '_blank');
+                };
+                
+                const setNavigation = (location) => {
+                    endLocation.value = location;
+                };
+                
+                const addExpense = () => {
+                    if (!newExpense.value.name.trim() || !newExpense.value.amount) return;
+                    
+                    expenses.value.push({
+                        name: newExpense.value.name,
+                        amount: Number(newExpense.value.amount),
+                        paymentMethod: newExpense.value.paymentMethod,
+                        date: newExpense.value.date,
+                        category: newExpense.value.category
+                    });
+                    
+                    // 重置表單
+                    newExpense.value = {
+                        name: '',
+                        amount: '',
+                        paymentMethod: 'cash',
+                        date: new Date().toISOString().split('T')[0],
+                        category: 'food'
+                    };
+                };
+                
+                const getPaymentMethodIcon = (methodId) => {
+                    const method = paymentMethods.value.find(m => m.id === methodId);
+                    return method ? method.icon : 'fas fa-question-circle';
+                };
+                
+                const getPaymentMethodName = (methodId) => {
+                    const method = paymentMethods.value.find(m => m.id === methodId);
+                    return method ? method.name : '未知';
+                };
+                
+                const getCategoryName = (categoryId) => {
+                    const categories = {
+                        food: '飲食',
+                        transportation: '交通',
+                        shopping: '購物',
+                        attraction: '景點門票',
+                        accommodation: '住宿',
+                        other: '其他'
+                    };
+                    return categories[categoryId] || categoryId;
+                };
+                
+                const addShoppingItem = () => {
+                    if (!newItem.value.name.trim()) return;
+                    
+                    shoppingList.value.push({
+                        name: newItem.value.name,
+                        completed: false,
+                        important: newItem.value.important,
+                        budget: newItem.value.budget || 0
+                    });
+                    
+                    // 重置表單
+                    newItem.value = {
+                        name: '',
+                        important: false,
+                        budget: ''
+                    };
+                };
+                
+                const toggleComplete = (index) => {
+                    shoppingList.value[index].completed = !shoppingList.value[index].completed;
+                };
+                
+                const deleteShoppingItem = (index) => {
+                    shoppingList.value.splice(index, 1);
+                };
+                
+                const clearCompleted = () => {
+                    shoppingList.value = shoppingList.value.filter(item => !item.completed);
+                };
+                
+                // 初始化
+                onMounted(() => {
+                    // 設定今天日期
+                    const today = new Date();
+                    const formattedDate = today.toISOString().split('T')[0];
+                    newExpense.value.date = formattedDate;
+                    
+                    // 設定新行程項目的預設時間
+                    newTripItem.value.time = '09:00';
+                });
+                
+                return {
+                    activeTab,
+                    tabs,
+                    preTripChecklist,
+                    newChecklistItem,
+                    tripDays,
+                    selectedDay,
+                    scheduleData,
+                    newTripItem,
+                    searchLocation,
+                    startLocation,
+                    endLocation,
+                    popularSpots,
+                    transportRoutes,
+                    paymentMethods,
+                    newExpense,
+                    expenses,
+                    expenseFilters,
+                    expenseFilter,
+                    travelBudget,
+                    newItem,
+                    shoppingList,
+                    showBudgetSummary,
+                    shoppingRecommendations,
+                    selectedDaySchedule,
+                    totalExpenses,
+                    averageDailyExpense,
+                    expenseCount,
+                    remainingBudget,
+                    filteredExpenses,
+                    completedItems,
+                    totalShoppingBudget,
+                    remainingShoppingBudget,
+                    addChecklistItem,
+                    addTripItem,
+                    removeTripItem,
+                    showNavigation,
+                    openGoogleMaps,
+                    setNavigation,
+                    addExpense,
+                    getPaymentMethodIcon,
+                    getPaymentMethodName,
+                    getCategoryName,
+                    addShoppingItem,
+                    toggleComplete,
+                    deleteShoppingItem,
+                    clearCompleted
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
+
+
